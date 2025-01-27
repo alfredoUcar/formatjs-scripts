@@ -1,0 +1,16 @@
+{
+  "name": "formatjs-scripts",
+  "version": "1.0.0",
+  "description": "Handy set of scripts for FormatJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "i18n",
+    "formatjs",
+    "translations"
+  ],
+  "author": "Alfredo Ucendo",
+  "license": "ISC"
+}
