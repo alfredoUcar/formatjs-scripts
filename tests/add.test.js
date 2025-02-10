@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
+const addNewMessages = require("../src/scripts/add");
 
 const extractedMessagesData = {
   first: { defaultMessage: "First text" },
@@ -62,10 +62,10 @@ afterEach(() => {
 });
 
 test("Add new messages to translated files", () => {
-  execSync(
-    `node ./src/scripts/add.js -s ${extractedMessagesFile} -t ${translatedDir}`,
-    { encoding: "utf8" }
-  );
+  addNewMessages({
+    sourceFile: extractedMessagesFile,
+    translationsDir: translatedDir,
+  });
 
   // Read the modified JSON
   const modifiedData = JSON.parse(

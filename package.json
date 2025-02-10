@@ -1,16 +1,23 @@
 {
   "name": "formatjs-scripts",
   "version": "1.0.0",
-  "description": "Handy set of scripts for FormatJS",
-  "main": "index.js",
+  "description": "Set of scripts for FormatJS",
+  "bin": "./src/cli.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --silent=false"
   },
   "keywords": [
     "i18n",
     "formatjs",
-    "translations"
+    "translations",
+    "internationalization"
   ],
   "author": "Alfredo Ucendo",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "minimist": "^1.2.8"
+  }
 }
