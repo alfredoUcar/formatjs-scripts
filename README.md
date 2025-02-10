@@ -4,13 +4,15 @@ These scripts aim to bridge the gap between the source code and the translation 
 
 ## Usage
 
-To add new messages to your existing catalog, run the following command:
+To add new messages to your existing catalog include this script in your `package.json`:
 
-```bash
-npm run add
+```json
+"scripts": {
+    "translations:add": "formatjs-scripts add --sourceFile 'path/to/extracted/messages.json' --translationsDir 'path/to/translated/messages/dir/'"
+}
 ```
 
-This will merge newly extracted messages into your existing catalog, preserving existing translations.
+This will merge new extracted messages into each json file containing current catalog, preserving existing translations.
 
 ## Contributing
 

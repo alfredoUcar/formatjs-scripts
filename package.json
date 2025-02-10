@@ -2,6 +2,10 @@
   "name": "formatjs-scripts",
   "version": "1.0.0",
   "description": "Set of scripts for FormatJS",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:alfredoUcar/formatjs-scripts.git"
+  },
   "bin": "./src/cli.js",
   "scripts": {
     "test": "jest --silent=false"
