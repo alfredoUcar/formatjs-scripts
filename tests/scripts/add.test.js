@@ -2,76 +2,62 @@ const fs = require("fs");
 const path = require("path");
 const addNewMessages = require("../../src/scripts/add");
 
-const extractedMessagesData = {
-  first: { defaultMessage: "First text" },
-  second: { defaultMessage: "Second text" },
-};
-const currentTranslationsData = {
-  first: { defaultMessage: "", sourceMessage: "First text" },
-};
+const fixturesDir = path.join(__dirname, "fixtures");
+const extractedMessagesFile = path.join(fixturesDir, "extracted", "en.json");
+const currentTranslationsFile = path.join(fixturesDir, "translated", "es.json");
 
 const expectedData = {
   first: { defaultMessage: "", sourceMessage: "First text" },
   second: { defaultMessage: "", sourceMessage: "Second text" },
 };
 
-const extractedMessagesFile = path.join(
-  __dirname,
-  "test-extracted-messages.json"
-);
+function ensureFixturesExist() {
+  if (!fs.existsSync(fixturesDir)) {
+    throw new Error("Fixtures directory does not exist");
+  }
+}
 
-const translatedDir = path.join(__dirname, "translated");
-
-const currentTranslationsFile = path.join(
-  __dirname,
-  "translated",
-  "test-current-translations.json"
-);
+function readJSONFile(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
 
 beforeEach(() => {
-  // Create test files before each test
-  fs.writeFileSync(
-    extractedMessagesFile,
-    JSON.stringify(extractedMessagesData, null, 2),
-    "utf8"
-  );
+  ensureFixturesExist();
 
-  if (!fs.existsSync(translatedDir)) {
-    fs.mkdirSync(translatedDir);
+  // Create a backup of the original translated files
+  const originalTranslationsDir = path.join(fixturesDir, "translated(backup)");
+  if (!fs.existsSync(originalTranslationsDir)) {
+    fs.mkdirSync(originalTranslationsDir);
   }
-  fs.writeFileSync(
-    currentTranslationsFile,
-    JSON.stringify(currentTranslationsData, null, 2),
-    "utf8"
-  );
+  fs.readdirSync(path.join(fixturesDir, "translated")).forEach((file) => {
+    fs.copyFileSync(
+      path.join(fixturesDir, "translated", file),
+      path.join(originalTranslationsDir, file)
+    );
+  });
 });
 
 afterEach(() => {
-  // Delete test files
-  if (fs.existsSync(extractedMessagesFile)) {
-    fs.unlinkSync(extractedMessagesFile);
-  }
-  const translatedDir = path.join(__dirname, "translated");
-  if (fs.existsSync(translatedDir)) {
-    fs.rm(translatedDir, { recursive: true }, (error) => {
-      if (error) {
-        console.error("Error deleting test directory:", error);
-      }
-    });
-  }
+  // Restore the original translated files
+  const originalTranslationsDir = path.join(fixturesDir, "translated(backup)");
+  fs.readdirSync(originalTranslationsDir).forEach((file) => {
+    fs.copyFileSync(
+      path.join(originalTranslationsDir, file),
+      path.join(fixturesDir, "translated", file)
+    );
+  });
+  fs.rmdirSync(path.join(fixturesDir, "translated(backup)"), {
+    recursive: true,
+  });
 });
 
 test("Add new messages to translated files", () => {
   addNewMessages({
     sourceFile: extractedMessagesFile,
-    translationsDir: translatedDir,
+    translationsDir: path.join(fixturesDir, "translated"),
   });
 
-  // Read the modified JSON
-  const modifiedData = JSON.parse(
-    fs.readFileSync(currentTranslationsFile, "utf8")
-  );
+  const modifiedData = readJSONFile(currentTranslationsFile);
 
-  // Verify that the changes are as expected
   expect(modifiedData).toEqual(expectedData);
 });
