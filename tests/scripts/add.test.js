@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const addNewMessages = require("../src/scripts/add");
+const addNewMessages = require("../../src/scripts/add");
 
 const extractedMessagesData = {
   first: { defaultMessage: "First text" },
